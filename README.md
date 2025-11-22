@@ -1,4 +1,5 @@
-Sustainable Vendor Decision System
+Sustainable Vendor Decision System (V4_VDS.py)
+Created by: CogitoCore
 
 🏭 Multi-Agent AI Platform for Enterprise Procurement Optimization
 
