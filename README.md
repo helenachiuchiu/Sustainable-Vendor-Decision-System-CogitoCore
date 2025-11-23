@@ -557,10 +557,10 @@ This project is provided as-is for educational and commercial use. Please ensure
 
 **CogitoCore** - Agents Intensive - Capstone Project (Kaggle · Community Hackathon)
 
-Helena Chiu
-Joshua
-Gautam Sutar
-Aakarshak Sethi
+- Helena Chiu
+- Joshua
+- Gautam Sutar
+- Aakarshak Sethi
 
 Designed for enterprise procurement teams in the textile industry.
 
