@@ -89,7 +89,7 @@ TOPSIS is a multi‑criteria decision method that ranks vendors by how close eac
 
 ---
 ### Solution Statement
-Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating procurement cycles, and aligning vendor selection with long-term sustainability goals.
+Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating purchasing cycles, and aligning vendor selection with long-term sustainability goals.
 
 ---
 ## 🚀 Installation
