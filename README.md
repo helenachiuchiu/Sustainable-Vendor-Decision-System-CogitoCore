@@ -74,52 +74,13 @@ flowchart TB
 
 ---
 
-## 🏗️ Execution Flow
-```mermaid
-flowchart TD
+### Execution Phases
 
-    %% PHASE TITLES
-    P1([🟦 Phase 1 – Parallel])
-    P2([🟩 Phase 2 – Sequential])
-    P3([🟧 Phase 3 – Ranking])
-    P4([🟥 Phase 4 – Iterative Loop])
-    P5([⬜ Phase 5 – Persistence])
+1. **Phase 1 (Parallel)**: Data Collection + Risk Analysis
+2. **Phase 2 (Sequential)**: Sustainability Assessment via Gemini LLM
+3. **Phase 3**: TOPSIS Multi-Criteria Ranking
+4. **Phase 4**: Validation Loop with Weight Adjustment
 
-    %% PHASE 1 – PARALLEL
-    DC["📥 DataCollectionAgent"]
-    RISK["⚠️ RiskAnalysisAgent"]
-
-    %% PHASE 2
-    SUST["🌱 SustainabilityAgent<br/>(Gemini LLM ESG Scoring)"]
-
-    %% PHASE 3
-    TOPSIS["🔢 TOPSISRankingAgent<br/>(Weighted Multi-Criteria Score)"]
-
-    %% PHASE 4
-    VALID["🔁 ValidationAgent<br/>(Max 3 Iterations)"]
-
-    %% PHASE 5
-    MEM["🗄️ MemoryAgent<br/>(Save Evaluation Records)"]
-
-    %% FLOW CONNECTIONS
-    P1 --> DC
-    P1 --> RISK
-
-    DC --> P2
-    RISK --> P2
-
-    P2 --> SUST
-    SUST --> P3
-
-    P3 --> TOPSIS
-    TOPSIS --> P4
-
-    P4 --> VALID
-    VALID -->|Loop until threshold| TOPSIS
-
-    P4 --> P5
-    P5 --> MEM
-```
 
 ---
 
