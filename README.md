@@ -214,9 +214,6 @@ streamlit run V4_VDS.py
   
 - Review Gemini AI reasoning
 - Examine validation loop adjustments
-
-![Review Results](/Images/15 Evaluation Results - Validation Loop Log.png)
-  
 - Download results as CSV
 
 ---
