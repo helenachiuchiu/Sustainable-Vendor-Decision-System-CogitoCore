@@ -158,24 +158,45 @@ streamlit run V4_VDS.py
 2. Choose mode:
    - **Demo Mode**: Leave API fields empty or enter "demo_mode"
    - **Live Mode**: Enter your API keys
- 
+
+ ![Login](/Images/1_login.png) 
 
 #### Step 2: Manage Vendors
 - Navigate to **"👥 Vendors"** page
+
+![Vendor Management – View Vendors](/Images/3_Vendor_Management_View_Vendors.png)
+  
 - View existing vendors (6 pre-loaded textile suppliers)
+
+![View existing vendors](/Images/5_View_existing_vendors.png)
+
 - Add new vendors with custom attributes
+
+![Add new vendors](/Images/4_Add_new_vendors.png)
+
 - Edit or delete existing vendors
+
+![Edit or delete existing vendors](/Images/6_Edit_or_delete_existing_vendors.png)
 
 #### Step 3: Create Evaluation
 1. Go to **"📝 New Evaluation"**
 2. **Select Vendors**: Choose vendors to evaluate
+
+![New Evaluation_Select Vendors](/Images/7_New_Evaluation_Select_Vendors.png)
+
 3. **Configure Weights**: Adjust importance of criteria
    - Cost
    - Quality
    - Delivery Time
    - Risk
    - Sustainability
+
+![Configure Weights](/Images/8_New_Evaluation_Step_2_Weight_Configuration.png)
+![9_New_Evaluation _Step_3_Weight_Configuration](/Images/9_New_Evaluation%20_Step_3_Weight_Configuration.png)
+
 4. **Execute**: Run multi-agent analysis
+
+![Execute](/Images/10_New_Evaluation_Step_3_Review_&_Execute.png)
 
 #### Step 4: Review Results
 - View ranked vendors with TOPSIS scores
@@ -189,7 +210,7 @@ streamlit run V4_VDS.py
 ## 📊 Evaluation Criteria
 
 ### 1. Cost (Lower is Better)
-- Total procurement cost in USD
+- Total purchasing cost in USD
 - Weighted against other factors
 
 ### 2. Quality (Higher is Better)
