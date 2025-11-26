@@ -200,9 +200,23 @@ streamlit run V4_VDS.py
 
 #### Step 4: Review Results
 - View ranked vendors with TOPSIS scores
+
+![Review Results](/Images/11_Evaluation_Results_Rankings.png)
+
+-Performance Radar of vendors
+
+![Review Results](/Images/12 Evaluation Results - Performance Radar.png)
+
 - Analyze sustainability breakdowns (Carbon, Labor, Waste)
+
+![Review Results](/Images/<img width="2552" height="1322" alt="13 Evaluation Results - Sustainability Analysis" src="https://github.com/user-attachments/assets/1f0c1e6b-87b9-4516-8a5e-d24daf756bb7" />
+
+  
 - Review Gemini AI reasoning
 - Examine validation loop adjustments
+
+![Review Results](/Images/15 Evaluation Results - Validation Loop Log.png)
+  
 - Download results as CSV
 
 ---
