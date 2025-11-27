@@ -175,7 +175,10 @@ streamlit run V4_VDS.py
 
 ![Add new vendor](/Images/4_Vendor_Management_Add_new_vendor.png)
 
-- Edit or delete existing vendors
+- Multiple ways to edit existing vendors
+   - Method 1
+      - Step 1: Select vendor to edit, then select `edit`
+      - Step 2: Select `Edit vendor` tab
 
 ![Edit or delete existing vendors](/Images/6_Edit_or_delete_existing_vendors.png)
 
