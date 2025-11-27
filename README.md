@@ -171,9 +171,9 @@ streamlit run V4_VDS.py
 
 ![Vendor Management – View Vendors](/Images/3_Vendor_Management_View_Vendors.png)
 
-- Add new vendors with custom attributes
+- Add new vendor with custom attributes
 
-![Add new vendors](/Images/4Vendor_Management_Add_new_vendor.png)
+![Add new vendor](/Images/4Vendor_Management_Add new_vendor.png)
 
 - Edit or delete existing vendors
 
