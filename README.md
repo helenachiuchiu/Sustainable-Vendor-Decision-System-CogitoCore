@@ -180,7 +180,18 @@ streamlit run V4_VDS.py
       - Step 1: Select vendor to edit, then select `edit`
       - Step 2: Select `Edit vendor` tab
 
-![Edit or delete existing vendors](/Images/6_Edit_or_delete_existing_vendors.png)
+![Edit existing vendors](/Images/Vendor_Management_Edit_Vendor_Method1_step1.png)
+
+   - Method 2
+      - Step 1: Select `Edit vendor` tab immediately
+      - Step 2: Select `edit` for vendor to edit
+
+![Edit existing vendors](/Images/Vendor_Mgt_Edit_Vendor_Method2_Step2.png)
+
+Both actions bring you to the same window
+
+![Edit existing vendors](/Images/Edit_Vendor_tab_activated.png)
+
 
 #### Step 3: Create Evaluation
 1. Go to **"📝 New Evaluation"**
