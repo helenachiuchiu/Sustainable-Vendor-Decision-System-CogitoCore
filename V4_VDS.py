@@ -2,14 +2,9 @@
 # Sustainable Vendor Decision System
 # Multi-Agent ADK System with Google Gemini & Real Tools
 # Agents Intensive - Capstone Project (Kaggle · Community Hackathon)
-# Created by (Team): CogitoCore
-# Helena Chiu (linkedin.com/in/hei-yiu-chiu)
-# Joshua (linkedin.com/in/joshua-b-214a7a306)
-# Gautam Sutar (linkedin.com/in/gautamsutar)
-# Aakarshak Sethi (linkedin.com/in/aakarshak-sethi-a5193b310)
 # ============================================================================
 # Installation (Run in Colab or terminal):
-# !pip install google-generativeai google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas numpy streamlit plotly requests
+# pip install google-generativeai google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas numpy streamlit plotly requests
 
 import streamlit as st
 import pandas as pd
@@ -54,16 +49,19 @@ class Vendor:
     id: str
     name: str
     cost: float
+    financial_stability: float
+    lead_time: int
+    technology: float
     quality: float
-    delivery_time: int
-    risk: float
+    hygiene: float
+    supply_chain_risk: float
     certifications: str = "None"
     
     # Computed by agents
     carbon_score: float = 0.0
     labor_score: float = 0.0
     waste_score: float = 0.0
-    sustainability_score: float = 0.0
+    ESG_score: float = 0.0
     topsis_score: float = 0.0
     risk_analysis: str = ""
     audit_log: str = ""
@@ -77,7 +75,7 @@ class AgentMessage:
     recipient: str
     payload: Dict[str, Any]
     timestamp: float
-    message_type: str  # data_enrichment, sustainability_score, ranking, validation
+    message_type: str  # data_enrichment, ESG_score, ranking, validation
 
 @dataclass
 class EvaluationRecord:
@@ -335,7 +333,7 @@ class DataCollectionAgent(BaseAgent):
                 # Publish message to bus
                 message = AgentMessage(
                     sender=self.name,
-                    recipient="SustainabilityAgent",
+                    recipient="ESGAgent",
                     payload={"vendor_id": vendor.id, "evidence": vendor.evidence_found},
                     timestamp=time.time(),
                     message_type="data_enrichment"
@@ -346,15 +344,15 @@ class DataCollectionAgent(BaseAgent):
         
         return _execute()
 
-class SustainabilityAgent(BaseAgent):
-    """Analyzes sustainability using Gemini LLM"""
+class ESGAgent(BaseAgent):
+    """Analyzes sustainability and ESG performance using Gemini LLM"""
     def __init__(self, bus: MessageBus, gemini_api_key: str = None):
-        super().__init__("SustainabilityAgent", bus, gemini_api_key)
+        super().__init__("ESGAgent", bus, gemini_api_key)
     
     def run(self, vendors: List[Vendor]) -> List[Vendor]:
         @self.track_execution
         def _execute():
-            self.log("Analyzing sustainability with Gemini AI...")
+            self.log("Analyzing sustainability and ESG performance with Gemini AI...")
             
             for vendor in vendors:
                 # Wait for data enrichment message
@@ -362,7 +360,7 @@ class SustainabilityAgent(BaseAgent):
                 
                 # Construct prompt for Gemini
                 prompt = f"""
-                You are an expert sustainability analyst for textile procurement.
+                You are an expert sustainability and ESG data analyst for textile procurement.
                 
                 Analyze the following vendor and provide scores (0-100) for:
                 1. Carbon Footprint Management (carbon_score)
@@ -372,7 +370,7 @@ class SustainabilityAgent(BaseAgent):
                 Vendor: {vendor.name}
                 Declared Certifications: {vendor.certifications}
                 Evidence Found: {vendor.evidence_found}
-                Risk Level: {vendor.risk}/100
+                Risk Level: {vendor.supply_chain_risk}/100
                 
                 Provide your analysis in this exact JSON format:
                 {{
@@ -417,19 +415,19 @@ class SustainabilityAgent(BaseAgent):
                     vendor.audit_log = "Fallback heuristic scoring applied"
                 
                 # Calculate aggregate
-                vendor.sustainability_score = (
+                vendor.ESG_score = (
                     vendor.carbon_score + vendor.labor_score + vendor.waste_score
                 ) / 3
                 
-                self.log(f"Sustainability score for {vendor.name}: {vendor.sustainability_score:.1f}")
+                self.log(f"ESG score for {vendor.name}: {vendor.ESG_score:.1f}")
                 
                 # Publish to bus
                 message = AgentMessage(
                     sender=self.name,
                     recipient="RiskAnalysisAgent",
-                    payload={"vendor_id": vendor.id, "sustainability_score": vendor.sustainability_score},
+                    payload={"vendor_id": vendor.id, "ESG_score": vendor.ESG_score},
                     timestamp=time.time(),
-                    message_type="sustainability_score"
+                    message_type="ESG_score"
                 )
                 self.bus.publish(message)
             
@@ -466,8 +464,8 @@ class RiskAnalysisAgent(BaseAgent):
                 You are a supply chain risk analyst for textile procurement.
                 
                 Analyze risks for: {vendor.name}
-                - Declared Risk Score: {vendor.risk}/100
-                - Delivery Time: {vendor.delivery_time} days
+                - Declared Risk Score: {vendor.supply_chain_risk}/100
+                - Lead Time: {vendor.lead_time} days
                 - Evidence: {vendor.evidence_found[:300]}
                 
                 Identify and categorize risks:
@@ -512,7 +510,8 @@ class TOPSISRankingAgent(BaseAgent):
             
             # Decision matrix
             data = np.array([
-                [v.cost, v.quality, v.delivery_time, v.risk, v.sustainability_score] 
+                [v.cost, v.financial_stability, v.lead_time, v.technology, 
+                 v.quality, v.hygiene, v.supply_chain_risk, v.ESG_score] 
                 for v in vendors
             ], dtype=float)
             
@@ -521,27 +520,33 @@ class TOPSISRankingAgent(BaseAgent):
             
             # Apply weights
             w_arr = np.array([
-                weights['cost'], weights['quality'], 
-                weights['delivery'], weights['risk'], 
-                weights['sustainability']
+                weights['cost'], weights['financial_stability'], weights['lead_time'],
+                weights['technology'], weights['quality'], weights['hygiene'], 
+                weights['supply_chain_risk'], weights['ESG_score']
             ])
             weighted_data = norm_data * w_arr
             
             # Ideal solutions
             ideal_best = np.array([
                 weighted_data[:, 0].min(),  # Cost (min)
-                weighted_data[:, 1].max(),  # Quality (max)
-                weighted_data[:, 2].min(),  # Delivery (min)
-                weighted_data[:, 3].min(),  # Risk (min)
-                weighted_data[:, 4].max()   # Sustainability (max)
+                weighted_data[:, 1].max(),  # Financial Stability (max)
+                weighted_data[:, 2].min(),  # Lead Time (min)
+                weighted_data[:, 3].max(),  # Technology (max)
+                weighted_data[:, 4].max(),  # Quality (max)
+                weighted_data[:, 5].max(),  # Hygiene (max)
+                weighted_data[:, 6].min(),  # Supply Chain Risk (min)
+                weighted_data[:, 7].max()   # ESG Score (max)
             ])
             
             ideal_worst = np.array([
                 weighted_data[:, 0].max(),
                 weighted_data[:, 1].min(),
                 weighted_data[:, 2].max(),
-                weighted_data[:, 3].max(),
-                weighted_data[:, 4].min()
+                weighted_data[:, 3].min(),
+                weighted_data[:, 4].min(),
+                weighted_data[:, 5].min(),
+                weighted_data[:, 6].max(),
+                weighted_data[:, 7].min()
             ])
             
             # Distances
@@ -553,7 +558,7 @@ class TOPSISRankingAgent(BaseAgent):
             
             for i, vendor in enumerate(vendors):
                 vendor.topsis_score = scores[i]
-                self.log(f"TOPSIS score for {vendor.name}: {scores[i]:.4f}")
+                self.log(f"TOPSIS score for {vendor.name}: {scores[i]:.7f}")
             
             # Sort by score
             vendors.sort(key=lambda x: x.topsis_score, reverse=True)
@@ -595,30 +600,32 @@ class ValidationAgent(BaseAgent):
                 top_vendor = current_vendors[0]
                 
                 self.log(f"Iteration {iteration}: Top vendor = {top_vendor.name}, "
-                        f"Sustainability = {top_vendor.sustainability_score:.1f}")
+                        f"ESG score = {top_vendor.ESG_score:.1f}")
                 
                 # Check if top vendor meets threshold
-                if top_vendor.sustainability_score >= self.min_threshold:
+                if top_vendor.ESG_score >= self.min_threshold:
                     validation_log.append(
-                        f"✓ Iteration {iteration}: {top_vendor.name} meets sustainability threshold "
-                        f"({top_vendor.sustainability_score:.1f} >= {self.min_threshold})"
+                        f"✓ Iteration {iteration}: {top_vendor.name} meets ESG threshold "
+                        f"({top_vendor.ESG_score:.1f} >= {self.min_threshold})"
                     )
                     self.log("Validation passed!")
                     break
                 else:
-                    # Adjust weights to prioritize sustainability
+                    # Adjust weights to prioritize ESG
                     validation_log.append(
                         f"⚠ Iteration {iteration}: {top_vendor.name} below threshold "
-                        f"({top_vendor.sustainability_score:.1f} < {self.min_threshold}). "
+                        f"({top_vendor.ESG_score:.1f} < {self.min_threshold}). "
                         f"Adjusting weights..."
                     )
                     
-                    # Increase sustainability weight
-                    current_weights['sustainability'] = min(0.7, current_weights['sustainability'] + 0.15)
+                    # Increase ESG score weight
+                    current_weights['ESG_score'] = min(0.7, current_weights['ESG_score'] + 0.15)
                     # Redistribute other weights
-                    remaining = 1.0 - current_weights['sustainability']
-                    for key in ['cost', 'quality', 'delivery', 'risk']:
-                        current_weights[key] = remaining / 4
+                    remaining = 1.0 - current_weights['ESG_score']
+                    other_keys = ['cost', 'financial_stability', 'lead_time', 'technology', 
+                                  'quality', 'hygiene', 'supply_chain_risk']
+                    for key in other_keys:
+                        current_weights[key] = remaining / len(other_keys)
                     
                     self.log(f"Adjusted weights: {current_weights}")
                     
@@ -627,8 +634,8 @@ class ValidationAgent(BaseAgent):
                     
                     if iteration == self.max_iterations:
                         validation_log.append(
-                            f"⚠ Max iterations reached. Best achievable sustainability: "
-                            f"{current_vendors[0].sustainability_score:.1f}"
+                            f"⚠ Max iterations reached. Best achievable ESG score: "
+                            f"{current_vendors[0].ESG_score:.1f}"
                         )
             
             return current_vendors, current_weights, validation_log
@@ -690,7 +697,7 @@ class MultiAgentOrchestrator:
         
         # Initialize agents
         self.data_agent = DataCollectionAgent(self.bus, self.search_tool, gemini_api_key)
-        self.sustainability_agent = SustainabilityAgent(self.bus, gemini_api_key)
+        self.esg_agent = ESGAgent(self.bus, gemini_api_key)
         self.risk_agent = RiskAnalysisAgent(self.bus, gemini_api_key)
         self.topsis_agent = TOPSISRankingAgent(self.bus, gemini_api_key)
         self.validation_agent = ValidationAgent(self.bus, gemini_api_key)
@@ -721,9 +728,9 @@ class MultiAgentOrchestrator:
             vendors = self.data_agent.run(vendors)
             vendors = self.risk_agent.run(vendors)
         
-        # Phase 2: Sequential sustainability analysis (depends on enriched data)
-        self.logger.info("Phase 2: Sustainability analysis")
-        vendors = self.sustainability_agent.run(vendors)
+        # Phase 2: Sequential ESG analysis (depends on enriched data)
+        self.logger.info("Phase 2: ESG analysis")
+        vendors = self.esg_agent.run(vendors)
         
         # Phase 3: TOPSIS ranking
         self.logger.info("Phase 3: TOPSIS ranking")
@@ -741,7 +748,7 @@ class MultiAgentOrchestrator:
             'total_duration': total_time,
             'agent_metrics': {
                 'data_collection': self.data_agent.metrics[-1].duration if self.data_agent.metrics else 0,
-                'sustainability': self.sustainability_agent.metrics[-1].duration if self.sustainability_agent.metrics else 0,
+                'ESG_analysis': self.esg_agent.metrics[-1].duration if self.esg_agent.metrics else 0,
                 'risk_analysis': self.risk_agent.metrics[-1].duration if self.risk_agent.metrics else 0,
                 'topsis': self.topsis_agent.metrics[-1].duration if self.topsis_agent.metrics else 0,
                 'validation': self.validation_agent.metrics[-1].duration if self.validation_agent.metrics else 0,
@@ -768,12 +775,12 @@ def init_session():
     
     if 'vendors' not in st.session_state:
         st.session_state.vendors = [
-            Vendor("V001", "Global Textiles Ltd", 45000, 88, 25, 15, "ISO 9001, ISO 14001, GOTS"),
-            Vendor("V002", "EcoFabrics Inc", 52000, 92, 30, 18, "ISO 9001, ISO 14001, GOTS, Fair Trade"),
-            Vendor("V003", "Premium Weave Co", 38000, 78, 20, 25, "ISO 9001"),
-            Vendor("V004", "Sustainable Threads", 48000, 85, 28, 20, "ISO 9001, ISO 14001, GOTS, OEKO-TEX"),
-            Vendor("V005", "FastFabric Solutions", 35000, 70, 15, 35, "None"),
-            Vendor("V006", "Quality First Textiles", 55000, 95, 35, 12, "ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX"),
+            Vendor("V001", "Global Textiles Ltd", 450, 95, 28, 75, 65, 70, 15, "ISO 9001, ISO 14001, GOTS"),
+            Vendor("V002", "EcoFabrics Inc", 1200, 60, 35, 90, 85, 90, 40, "ISO 9001, ISO 14001, GOTS, Fair Trade"),
+            Vendor("V003", "Premium Weave Co", 1550, 85, 42, 65, 98, 85, 20, "ISO 9001"),
+            Vendor("V004", "Sustainable Threads", 1100, 55, 28, 70, 80, 85, 45, "ISO 9001, ISO 14001, GOTS, OEKO-TEX"),
+            Vendor("V005", "FastFabric Solutions", 700, 70, 7, 95, 60, 65, 30, "None"),
+            Vendor("V006", "Quality First Textiles", 850, 80, 35, 60, 95, 90, 10, "ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX"),
         ]
     
     if 'history' not in st.session_state:
@@ -986,7 +993,8 @@ def vendor_mgmt_page():
     
     with tab1:
         df = pd.DataFrame([asdict(v) for v in st.session_state.vendors])
-        display_cols = ['id', 'name', 'cost', 'quality', 'delivery_time', 'risk', 'certifications']
+        display_cols = ['id', 'name', 'cost', 'financial_stability', 'lead_time', 'technology', 
+                       'quality', 'hygiene', 'supply_chain_risk', 'certifications']
         st.dataframe(df[display_cols], use_container_width=True, height=400)
         
         st.divider()
@@ -1031,11 +1039,14 @@ def vendor_mgmt_page():
             with col1:
                 v_id = st.text_input("Vendor ID*", f"V{len(st.session_state.vendors)+1:03d}")
                 v_name = st.text_input("Vendor Name*")
-                v_cost = st.number_input("Cost ($)*", min_value=0.0, value=10000.0, step=1000.0)
-                v_quality = st.number_input("Quality (0-100)*", 0, 100, 80)
+                v_cost = st.number_input("Cost (USD) per 100 yards*", min_value=0.0, value=1000.0, step=100.0)
+                v_financial_stability = st.number_input("Financial Stability (0-100)*", 0, 100, 80)
+                v_lead_time = st.number_input("Lead Time (days)*", 1, 365, 30)
+                v_technology = st.number_input("Technology Score (0-100)*", 0, 100, 75)  
             with col2:
-                v_delivery = st.number_input("Delivery Time (days)*", 1, 365, 30)
-                v_risk = st.number_input("Risk Score (0-100)*", 0, 100, 20)
+                v_quality = st.number_input("Quality (0-100)*", 0, 100, 85)
+                v_hygiene = st.number_input("Hygiene Score (0-100)*", 0, 100, 80)
+                v_supply_chain_risk = st.number_input("Supply Chain Risk (0-100)*", 0, 100, 20)
                 v_certs = st.text_input("Certifications", "None")
             
             st.caption("* Required fields")
@@ -1051,7 +1062,8 @@ def vendor_mgmt_page():
                 elif v_id in [v.id for v in st.session_state.vendors]:
                     st.error(f"❌ Vendor ID '{v_id}' already exists!")
                 else:
-                    new_vendor = Vendor(v_id, v_name, v_cost, v_quality, v_delivery, v_risk, v_certs)
+                    new_vendor = Vendor(v_id, v_name, v_cost, v_financial_stability, v_lead_time, 
+                                       v_technology, v_quality, v_hygiene, v_supply_chain_risk, v_certs)
                     st.session_state.vendors.append(new_vendor)
                     st.success(f"✅ Added {v_name} successfully!")
                     time.sleep(1)
@@ -1072,11 +1084,14 @@ def vendor_mgmt_page():
                     with col1:
                         e_id = st.text_input("Vendor ID", vendor_to_edit.id, disabled=True, help="ID cannot be changed")
                         e_name = st.text_input("Vendor Name*", vendor_to_edit.name)
-                        e_cost = st.number_input("Cost ($)*", min_value=0.0, value=float(vendor_to_edit.cost), step=1000.0)
-                        e_quality = st.number_input("Quality (0-100)*", 0, 100, int(vendor_to_edit.quality))
+                        e_cost = st.number_input("Cost (USD) per 100 yards*", min_value=0.0, value=float(vendor_to_edit.cost), step=100.0)
+                        e_financial_stability = st.number_input("Financial Stability (0-100)*", 0, 100, int(vendor_to_edit.financial_stability))
+                        e_lead_time = st.number_input("Lead Time (days)*", 1, 365, int(vendor_to_edit.lead_time))
+                        e_technology = st.number_input("Technology Score (0-100)*", 0, 100, int(vendor_to_edit.technology))
                     with col2:
-                        e_delivery = st.number_input("Delivery Time (days)*", 1, 365, int(vendor_to_edit.delivery_time))
-                        e_risk = st.number_input("Risk Score (0-100)*", 0, 100, int(vendor_to_edit.risk))
+                        e_quality = st.number_input("Quality (0-100)*", 0, 100, int(vendor_to_edit.quality))
+                        e_hygiene = st.number_input("Hygiene Score (0-100)*", 0, 100, int(vendor_to_edit.hygiene))
+                        e_supply_chain_risk = st.number_input("Supply Chain Risk (0-100)*", 0, 100, int(vendor_to_edit.supply_chain_risk))
                         e_certs = st.text_input("Certifications", vendor_to_edit.certifications)
                     
                     st.caption("* Required fields")
@@ -1094,11 +1109,14 @@ def vendor_mgmt_page():
                             # Update the vendor
                             vendor_to_edit.name = e_name
                             vendor_to_edit.cost = e_cost
+                            vendor_to_edit.financial_stability = e_financial_stability
+                            vendor_to_edit.lead_time = e_lead_time
+                            vendor_to_edit.technology = e_technology
                             vendor_to_edit.quality = e_quality
-                            vendor_to_edit.delivery_time = e_delivery
-                            vendor_to_edit.risk = e_risk
+                            vendor_to_edit.hygiene = e_hygiene
+                            vendor_to_edit.supply_chain_risk = e_supply_chain_risk
                             vendor_to_edit.certifications = e_certs
-                            
+                        
                             st.success(f"✅ Updated {e_name} successfully!")
                             st.session_state.edit_vendor_id = None
                             time.sleep(1)
@@ -1158,13 +1176,18 @@ def new_evaluation_page():
         st.subheader("Step 2: Weight Configuration")
         
         preset = st.selectbox("Preset", ["Custom", "Balanced", "Cost Focused", 
-                                          "Sustainability First", "Quality First"])
+                                          "ESG-oriented", "Business Sustainability prioritized"])
         
         presets = {
-            "Balanced": {"cost": 0.2, "quality": 0.2, "delivery": 0.2, "risk": 0.2, "sustainability": 0.2},
-            "Cost Focused": {"cost": 0.5, "quality": 0.1, "delivery": 0.1, "risk": 0.1, "sustainability": 0.2},
-            "Sustainability First": {"cost": 0.1, "quality": 0.1, "delivery": 0.1, "risk": 0.1, "sustainability": 0.6},
-            "Quality First": {"cost": 0.1, "quality": 0.5, "delivery": 0.1, "risk": 0.1, "sustainability": 0.2},
+            "Balanced": {"cost": 0.125, "financial_stability": 0.125, "lead_time": 0.125, "technology": 0.125, 
+                        "quality": 0.125, "hygiene": 0.125, "supply_chain_risk": 0.125, "ESG_score": 0.125},
+            "Cost Focused": {"cost": 0.45, "financial_stability": 0.2, "lead_time": 0.1, "technology": 0.05, 
+                           "quality": 0.1, "hygiene": 0.05, "supply_chain_risk": 0.049, "ESG_score": 0.001},
+            "ESG-oriented": {"cost": 0.15, "financial_stability": 0.1, "lead_time": 0.05, "technology": 0.05, 
+                           "quality": 0.1, "hygiene": 0.1, "supply_chain_risk": 0.15, "ESG_score": 0.3},
+            "Business Sustainability prioritized": {"cost": 0.2, "financial_stability": 0.2, "lead_time": 0.1, 
+                                                   "technology": 0.1, "quality": 0.1, "hygiene": 0.1, 
+                                                   "supply_chain_risk": 0.1, "ESG_score": 0.1}
         }
         
         defaults = presets.get(preset, presets["Balanced"])
@@ -1172,13 +1195,16 @@ def new_evaluation_page():
         col1, col2 = st.columns(2)
         with col1:
             w_cost = st.slider("💰 Cost", 0.0, 1.0, defaults['cost'])
-            w_quality = st.slider("⭐ Quality", 0.0, 1.0, defaults['quality'])
-            w_delivery = st.slider("🚚 Delivery", 0.0, 1.0, defaults['delivery'])
+            w_financial_stability = st.slider("🏦 Financial Stability", 0.0, 1.0, defaults['financial_stability'])
+            w_lead_time = st.slider("🚚 Lead Time", 0.0, 1.0, defaults['lead_time'])
+            w_technology = st.slider("🛠️ Technology", 0.0, 1.0, defaults['technology'])
         with col2:
-            w_risk = st.slider("⚠️ Risk", 0.0, 1.0, defaults['risk'])
-            w_sustainability = st.slider("🌱 Sustainability", 0.0, 1.0, defaults['sustainability'])
+            w_quality = st.slider("⭐ Quality", 0.0, 1.0, defaults['quality'])
+            w_hygiene = st.slider("🧼 Hygiene", 0.0, 1.0, defaults['hygiene'])
+            w_risk = st.slider("⚠️ Supply Chain Risk", 0.0, 1.0, defaults['supply_chain_risk'])
+            w_ESG = st.slider("🌱 ESG Score", 0.0, 1.0, defaults['ESG_score'])
         
-        total = w_cost + w_quality + w_delivery + w_risk + w_sustainability
+        total = w_cost + w_financial_stability + w_lead_time + w_quality + w_technology + w_hygiene + w_risk + w_ESG
         st.info(f"Total weight: {total:.2f} (will be normalized)")
         
         col_b, col_n = st.columns([1, 1])
@@ -1191,10 +1217,13 @@ def new_evaluation_page():
             else:
                 st.session_state.eval_weights = {
                     "cost": w_cost/total,
+                    "financial_stability": w_financial_stability/total,
+                    "lead_time": w_lead_time/total,
+                    "technology": w_technology/total,
                     "quality": w_quality/total,
-                    "delivery": w_delivery/total,
-                    "risk": w_risk/total,
-                    "sustainability": w_sustainability/total
+                    "hygiene": w_hygiene/total,
+                    "supply_chain_risk": w_risk/total,
+                    "ESG_score": w_ESG/total,
                 }
                 st.session_state.eval_step = 3
                 st.rerun()
@@ -1241,7 +1270,7 @@ def new_evaluation_page():
                 )
                 
                 progress_bar.progress(0.5)
-                status_text.text("Phase 2: Sustainability analysis...")
+                status_text.text("Phase 2: ESG analysis...")
                 time.sleep(0.5)
                 
                 progress_bar.progress(0.8)
@@ -1296,12 +1325,12 @@ def results_page():
     # Rankings table
     st.subheader("📊 Rankings")
     df = pd.DataFrame(rec.results)
-    df_display = df[['name', 'topsis_score', 'sustainability_score', 'cost', 
-                     'quality', 'delivery_time', 'risk']].copy()
-    df_display.columns = ['Vendor', 'TOPSIS Score', 'Sustainability', 'Cost', 
-                          'Quality', 'Delivery', 'Risk']
-    df_display['TOPSIS Score'] = df_display['TOPSIS Score'].map('{:.4f}'.format)
-    df_display['Sustainability'] = df_display['Sustainability'].map('{:.1f}'.format)
+    df_display = df[['name', 'topsis_score', 'ESG_score', 'cost', 'financial_stability',
+                     'technology', 'quality', 'hygiene', 'supply_chain_risk']].copy()
+    df_display.columns = ['Vendor', 'TOPSIS Score', 'ESG Score', 'Cost', 
+                          'Financial Stability', 'Technology', 'Quality', 'Hygiene', 'Supply Chain Risk']
+    df_display['TOPSIS Score'] = df_display['TOPSIS Score'].map('{:.7f}'.format)
+    df_display['ESG Score'] = df_display['ESG Score'].map('{:.1f}'.format)
     df_display.index += 1
     
     st.dataframe(df_display, use_container_width=True)
@@ -1313,21 +1342,24 @@ def results_page():
     st.divider()
     
     # Detailed analysis tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Performance Radar", "🌱 Sustainability", 
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Performance Radar", "🌱 ESG Analysis", 
                                        "📈 Agent Metrics", "🔍 Validation Log"])
     
     with tab1:
         st.subheader("Top 3 Vendor Comparison")
         cols = st.columns(3)
-        categories = ['Cost (inv)', 'Quality', 'Delivery (inv)', 'Risk (inv)', 'Sustainability']
+        categories = ['Cost', 'Financial Stability', 'Lead Time', 'Technology', 'Quality', 'Hygiene', 'Supply Chain Risk', 'ESG']
         
         for i, v_dict in enumerate(rec.results[:3]):
             vals = [
-                100 - (v_dict['cost']/1000),
+                100 - (v_dict['cost']/20),
+                v_dict['financial_stability'],
+                100 - (v_dict['lead_time']*2),
+                v_dict['technology'],
                 v_dict['quality'],
-                100 - (v_dict['delivery_time']*2),
-                100 - v_dict['risk'],
-                v_dict['sustainability_score']
+                v_dict['hygiene'],
+                100 - v_dict['supply_chain_risk'],
+                v_dict['ESG_score']
             ]
             vals = [max(0, min(100, x)) for x in vals]
             
@@ -1345,9 +1377,9 @@ def results_page():
                 st.plotly_chart(fig, use_container_width=True)
     
     with tab2:
-        st.subheader("🌱 Sustainability Analysis")
+        st.subheader("🌱 ESG Analysis")
         for i, v_dict in enumerate(rec.results):
-            with st.expander(f"#{i+1} {v_dict['name']} (Score: {v_dict['sustainability_score']:.1f})"):
+            with st.expander(f"#{i+1} {v_dict['name']} (Score: {v_dict['ESG_score']:.1f})"):
                 c1, c2, c3 = st.columns(3)
                 c1.metric("🌍 Carbon", f"{v_dict['carbon_score']:.0f}/100")
                 c2.metric("👷 Labor", f"{v_dict['labor_score']:.0f}/100")
@@ -1431,7 +1463,7 @@ def history_page():
             
             st.write("**Top 3:**")
             for j, v in enumerate(rec.results[:3]):
-                st.markdown(f"{j+1}. **{v['name']}** (Score: {v['topsis_score']:.4f})")
+                st.markdown(f"{j+1}. **{v['name']}** (Score: {v['topsis_score']:.7f})")
             
             if st.button(f"View Full Results", key=f"hist_{i}"):
                 st.session_state.last_results = rec
@@ -1451,7 +1483,7 @@ def system_metrics_page():
     
     agents = [
         ("DataCollector", orchestrator.data_agent),
-        ("SustainabilityAgent", orchestrator.sustainability_agent),
+        ("ESGAgent", orchestrator.esg_agent),
         ("RiskAnalysisAgent", orchestrator.risk_agent),
         ("TOPSISAgent", orchestrator.topsis_agent),
         ("ValidationAgent", orchestrator.validation_agent),
