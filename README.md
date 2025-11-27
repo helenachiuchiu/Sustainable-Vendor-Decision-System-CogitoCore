@@ -163,12 +163,9 @@ streamlit run V4_VDS.py
 
 #### Step 2: Manage Vendors
 - Navigate to **"👥 Vendors"** page
-
-![Vendor Management – View Vendors](/Images/3_Vendor_Management_View_Vendors.png)
-  
 - View existing vendors (6 pre-loaded textile suppliers)
 
-![View existing vendors](/Images/5_View_existing_vendors.png)
+![Vendor Management – View Vendors](/Images/3_Vendor_Management_View_Vendors.png)
 
 - Add new vendors with custom attributes
 
