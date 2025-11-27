@@ -159,10 +159,11 @@ streamlit run V4_VDS.py
    - **Demo Mode**: Leave API fields empty or enter "demo_mode"
    - **Live Mode**: Enter your API keys
 
-- Dashboard page
-![Dasboard](/Images/Dashboard_page.png)
-
  ![Login](/Images/1_login.png) 
+
+ - Dashboard page
+
+![Dasboard](/Images/Dashboard_page.png)
 
 #### Step 2: Manage Vendors
 - Navigate to **"👥 Vendors"** page
