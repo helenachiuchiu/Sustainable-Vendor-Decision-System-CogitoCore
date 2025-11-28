@@ -1,7 +1,6 @@
-Sustainable Vendor Decision System (V4_VDS.py)
-Created by: CogitoCore
+## 📋 Project Overview - Sustainable Vendor Decision System
 
-🏭 Multi-Agent AI Platform for Enterprise Procurement Optimization
+This project contains the core logic for Sustainable Vendor Decision System, a multi-agent system designed  for enterprise purchasing teams to optimize vendor selection with consideration on ESG objectives. Built specifically for the textile industry purchasing department, the system leverages Google Gemini LLM, TOPSIS multi-criteria decision analysis, and intelligent agent orchestration to evaluate and rank vendors across multiple dimensions.
 
 ## 🌐 Live Demo
 
@@ -14,24 +13,14 @@ Created by: CogitoCore
 
 ---
 
-## 📋 Overview
+### Problem Statement
 
-**Sustainable Vendor Decision System (V4_VDS.py)** is an advanced Multi-Agent AI System designed for enterprise purchasing teams to optimize vendor selection with a focus on supply chain sustainability. Built specifically for the textile industry purchasing department, the system leverages Google Gemini LLM, TOPSIS multi-criteria decision analysis, and intelligent agent orchestration to evaluate and rank vendors across multiple dimensions.
+TOPSIS is a multi‑criteria decision method that ranks vendors by how close each is to an “ideal” supplier (best cost, quality, sustainability, risk profile, delivery time) and far from the “worst”, with criteria weights reflecting business nature, values, operating context and scalability needs. Automated TOPSIS platforms can (1) store user‑preferred evaluation profiles, (2) pull real‑time online data on vendor cost, delivery, ESG, financial and compliance risks, and (3) auto‑score and weight criteria. Normalisation and distance calculations are then executed instantly and consistently. This reduces manual bias, speeds procurement (or purchasing) , and enables continuous re‑evaluation as conditions change, helping enterprises detect emerging risks early while aligning vendor choices with long‑term operational resilience and sustainability goals.
 
----
+### Solution Statement
+Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating purchasing cycles, and aligning vendor selection with long-term sustainability goals.
 
-## 🎯 Key Features
-
-### 🤖 Multi-Agent Architecture
-- **6 Specialized AI Agents** working collaboratively:
-  - **DataCollectionAgent**: Web scraping and data enrichment using Google Custom Search API
-  - **ESGAgent**: Sustainability analysis powered by Google Gemini LLM
-  - **RiskAnalysisAgent**: Supply chain risk assessment with AI reasoning
-  - **TOPSISRankingAgent**: Multi-criteria decision making using TOPSIS algorithm
-  - **ValidationAgent**: Iterative validation with automatic weight adjustment
-  - **MemoryAgent**: Historical context and long-term learning
-
-## 🏗️ System Architecture
+## 🏗️ Architecture
 ```mermaid
 
 flowchart TB
@@ -62,6 +51,17 @@ flowchart TB
     VALID --> MEM
 
 ```
+---
+## 🎯 Key Features
+
+### 🤖 Multi-Agent Architecture
+- **6 Specialized AI Agents** working collaboratively:
+  - **DataCollectionAgent**: Web scraping and data enrichment using Google Custom Search API
+  - **ESGAgent**: Sustainability analysis powered by Google Gemini LLM
+  - **RiskAnalysisAgent**: Supply chain risk assessment with AI reasoning
+  - **TOPSISRankingAgent**: Multi-criteria decision making using TOPSIS algorithm
+  - **ValidationAgent**: Iterative validation with automatic weight adjustment
+  - **MemoryAgent**: Historical context and long-term learning
 
 ---
 ### Intelligent Decision Making
@@ -150,16 +150,6 @@ flowchart TB
 5. **Phase 5**: Persistence
    - MemoryAgent saves evaluation record
    - Historical context updated
-
-
----
-### Problem Statement
-
-TOPSIS is a multi‑criteria decision method that ranks vendors by how close each is to an “ideal” supplier (best cost, quality, sustainability, risk profile, delivery time) and far from the “worst”, with criteria weights reflecting business nature, values, operating context and scalability needs. Automated TOPSIS platforms can (1) store user‑preferred evaluation profiles, (2) pull real‑time online data on vendor cost, delivery, ESG, financial and compliance risks, and (3) auto‑score and weight criteria. Normalisation and distance calculations are then executed instantly and consistently. This reduces manual bias, speeds procurement (or purchasing) , and enables continuous re‑evaluation as conditions change, helping enterprises detect emerging risks early while aligning vendor choices with long‑term operational resilience and sustainability goals.
-
----
-### Solution Statement
-Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating purchasing cycles, and aligning vendor selection with long-term sustainability goals.
 
 ---
 ## 🚀 Installation
