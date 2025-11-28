@@ -259,15 +259,16 @@ Both actions bring you to the same window
 
 ![New Evaluation_Select Vendors](/Images/7_New_Evaluation_Select_Vendors.png)
 
-3. **Configure Weights**: Adjust importance of criteria
-   - Cost
-   - Quality
-   - Delivery Time
-   - Risk
-   - Sustainability
+3. **Configure Weights**
+- Choose preset profile:
+  - Balanced (equal weights)
+  - Cost Focused
+  - ESG-oriented
+  - Business Sustainability prioritized
+- Or customize individual weights
 
 ![Configure Weights](/Images/8_New_Evaluation_Step_2_Weight_Configuration.png)
-![9_New_Evaluation _Step_3_Weight_Configuration](/Images/9_New_Evaluation%20_Step_3_Weight_Configuration.png)
+![9_New_Evaluation _Step_3_Weight_Configuration](/Images/Weight_config_dropdown_list.png)
 
 4. **Execute**: Run multi-agent analysis
 
