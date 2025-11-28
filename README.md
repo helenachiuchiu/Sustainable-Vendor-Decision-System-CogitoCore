@@ -22,25 +22,14 @@ Created by: CogitoCore
 
 ## 🎯 Key Features
 
-### Multi-Agent Architecture
-- **6 Specialized AI Agents** working in coordinated phases
-- **LLM-Powered Intelligence** using Google Gemini 1.5 Flash
-- **Parallel & Sequential Execution** for optimal performance
-- **Iterative Validation Loop** ensuring sustainability compliance
-
-### Intelligent Decision Making
-- **TOPSIS Algorithm** for multi-criteria vendor ranking
-- **Real-time Web Search** for vendor intelligence gathering
-- **Sustainability Scoring** across Carbon, Labor, and Waste dimensions
-- **Risk Analysis** with compliance and reputational assessment
-
-### Enterprise-Ready Features
-- **Interactive Streamlit UI** for non-technical users
-- **Historical Memory** with evaluation tracking
-- **Comprehensive Logging** and performance metrics
-- **Demo Mode** for testing without API keys
-
----
+### 🤖 Multi-Agent Architecture
+- **6 Specialized AI Agents** working collaboratively:
+  - **DataCollectionAgent**: Web scraping and data enrichment using Google Custom Search API
+  - **ESGAgent**: Sustainability analysis powered by Google Gemini LLM
+  - **RiskAnalysisAgent**: Supply chain risk assessment with AI reasoning
+  - **TOPSISRankingAgent**: Multi-criteria decision making using TOPSIS algorithm
+  - **ValidationAgent**: Iterative validation with automatic weight adjustment
+  - **MemoryAgent**: Historical context and long-term learning
 
 ## 🏗️ System Architecture
 ```mermaid
@@ -48,15 +37,15 @@ Created by: CogitoCore
 flowchart TB
 
     %% --- Top Orchestrator ---
-    ORCH["🧠 MULTI-AGENT ORCHESTRATOR<br/>(Coordinates 4-phase execution flow)"]
+    ORCH["🧠MULTI-AGENT ORCHESTRATOR <br/>(Coordinates all agents <br/> + manages execution flow)"]
 
     %% --- Agent Layer ---
     DC["📥 DATA COLLECTOR<br/>(Data Collection Agent)"]
     RISK["⚠️ RISK ANALYST<br/>(Risk Analysis Agent)"]
-    SUST["🌱 SUSTAINABILITY AGENT"]
+    SUST["🌱 ESG AGENT"]
     TOPSIS["🔢 TOPSIS RANKING"]
-    VALID["🔁 VALIDATION LOOP"]
-    
+    VALID["🔁 VALIDATION Agent<br/>(Loop Control)"]
+    MEM["MEMORY Agent (Persistence)"]
     %% --- Flow Connections ---
     ORCH --> DC
     ORCH --> RISK
@@ -70,8 +59,72 @@ flowchart TB
     
     VALID --> TOPSIS
 
+    VALID --> MEM
+
 ```
 
+---
+### Intelligent Decision Making
+- **TOPSIS Algorithm** for multi-criteria vendor ranking
+- **Real-time Web Search** for vendor intelligence gathering
+- **Sustainability Scoring** across Carbon, Labor, and Waste dimensions
+- **Risk Analysis** with compliance and reputational assessment
+
+### 🌱 Comprehensive ESG Evaluation
+- **Carbon Footprint Management** scoring
+- **Labor Practices & Ethics** assessment
+- **Waste & Resource Management** analysis
+- Certification validation (ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX)
+- Real-time evidence gathering from web sources
+
+### 📊 Advanced Analytics
+- **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)** multi-criteria ranking
+- 8 evaluation dimensions:
+  - Cost efficiency
+  - Financial stability
+  - Lead time
+  - Technology adoption
+  - Quality standards
+  - Hygiene compliance
+  - Supply chain risk
+  - ESG performance
+- Customizable weight configurations with preset profiles
+
+### 🔄 Intelligent Validation Loop
+- Automatic sustainability threshold enforcement
+- Dynamic weight adjustment for ESG compliance
+- Iterative re-ranking until optimal solution found
+- Maximum 3 validation iterations with detailed logging
+
+### 📈 Enterprise-Grade Observability
+- Real-time agent execution metrics
+- Message bus activity monitoring
+- Performance trend analysis
+- Structured JSON logging
+- Historical evaluation tracking
+
+---
+
+## 🛠️ Technology Stack
+
+### Core Technologies
+- **Python 3.8+**
+- **Streamlit** - Interactive web interface
+- **Google Gemini 1.5 Flash** - Large Language Model for AI reasoning
+- **Google Custom Search API** - Real-time vendor data enrichment
+- **NumPy & Pandas** - Data processing and analysis
+- **Plotly** - Interactive visualizations
+
+### AI/ML Components
+- **google-generativeai** - Gemini LLM integration
+- **TOPSIS Algorithm** - Multi-criteria decision analysis
+- **Agent-to-Agent (A2A) Protocol** - Structured message passing
+- **ThreadPoolExecutor** - Parallel agent execution
+
+### APIs & Integrations
+- Google Gemini API
+- Google Custom Search API
+- Google Sheets API (for persistent storage)
 ---
 
 ### Execution Phases
