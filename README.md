@@ -487,7 +487,6 @@ Designed for enterprise procurement teams in the textile industry.
 - [Gemini API Documentation](https://ai.google.dev/docs)
 - [Google Custom Search API](https://developers.google.com/custom-search)
 - [Streamlit Documentation](https://docs.streamlit.io)
-- [TOPSIS Algorithm Explanation](https://en.wikipedia.org/wiki/TOPSIS)
 
 ---
 
