@@ -268,7 +268,7 @@ Both actions bring you to the same window
 - Or customize individual weights
 
 ![Configure Weights](/Images/8_New_Evaluation_Step_2_Weight_Configuration.png)
-![9_New_Evaluation _Step_3_Weight_Configuration](/Images/Weight_config_dropdown_list.png)
+![9_New_Evaluation _Step_2_Weight_Configuration](/Images/Weight_config_dropdown_list.png)
 
 4. **Execute**: Run multi-agent analysis
 
