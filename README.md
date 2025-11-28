@@ -60,7 +60,7 @@ The `DataCollectionAgent` enriches vendor data by querying the web for sustainab
 ### ESG Consultant: `ESGAgent`  
 The `ESGAgent` evaluates each vendor’s sustainability performance using Google Gemini. It consumes enriched evidence from the message bus and calls the `query_gemini` function in the base agent to generate JSON-formatted ESG scores. It outputs `carbon_score`, `labor_score`, `waste_score`, and an aggregated `ESG_score`, along with qualitative `audit_log`/reasoning. If Gemini is unavailable, it falls back to a heuristic `_fallback_scoring` function based on certifications and text signals. Its purpose is to convert unstructured sustainability evidence into structured, comparable ESG metrics.
 
-### Risk Manager: `RiskAnalysisAgent`  
+### Risk Analyst: `RiskAnalysisAgent`  
 The `RiskAnalysisAgent` focuses on supply chain risk dimensions such as delivery, compliance, reputational, and financial risks. It uses Gemini via `query_gemini` to analyze vendor attributes (lead time, risk score, evidence) and produce a concise narrative `risk_analysis` for each vendor. The agent publishes this analysis to the message bus for use by the ranking and reporting layers. Its purpose is to surface non‑financial and non‑ESG risks in a human‑readable form, supporting more holistic procurement decisions.
 
 ### Quantitative Analyst: `TOPSISRankingAgent`  
