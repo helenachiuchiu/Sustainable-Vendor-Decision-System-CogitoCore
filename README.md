@@ -127,12 +127,29 @@ flowchart TB
 - Google Sheets API (for persistent storage)
 ---
 
-### Execution Phases
+### Data Flow
 
-1. **Phase 1 (Parallel)**: Data Collection + Risk Analysis
-2. **Phase 2 (Sequential)**: Sustainability Assessment via Gemini LLM
-3. **Phase 3**: TOPSIS Multi-Criteria Ranking
-4. **Phase 4**: Validation Loop with Weight Adjustment
+1. **Phase 1**: Parallel execution
+   - DataCollectionAgent: Web scraping + certification validation
+   - RiskAnalysisAgent: Supply chain risk assessment
+
+2. **Phase 2**: Sequential ESG analysis
+   - ESGAgent: Gemini-powered sustainability scoring
+   - Carbon, Labor, Waste dimensions evaluated
+
+3. **Phase 3**: TOPSIS ranking
+   - Multi-criteria decision matrix construction
+   - Weighted normalization
+   - Distance to ideal solution calculation
+
+4. **Phase 4**: Validation loop
+   - Check ESG threshold (default: 60/100)
+   - Adjust weights if needed
+   - Re-rank until compliant or max iterations
+
+5. **Phase 5**: Persistence
+   - MemoryAgent saves evaluation record
+   - Historical context updated
 
 
 ---
