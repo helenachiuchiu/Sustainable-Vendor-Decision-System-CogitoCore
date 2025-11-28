@@ -52,62 +52,29 @@ flowchart TB
 
 ```
 ---
+## 🤖 Agent Descriptions
 
-## Value Statement
+### Research Analyst:`DataCollectionAgent`  
+The `DataCollectionAgent` enriches vendor data by querying the web for sustainability-related information. Using the `GoogleSearchTool`, it pulls evidence on certifications, ESG initiatives, and news items for each vendor. It parses this evidence to infer or update certifications (e.g., ISO 14001, GOTS, Fair Trade, OEKO‑TEX) and logs all findings. Its main output is an updated set of vendor objects with `evidence_found` and refined `certifications`, which it publishes to the message bus for downstream agents. Its purpose is to transform static vendor records into richer, context-aware profiles grounded in external data.
+
+### ESG Consultant: `ESGAgent`  
+The `ESGAgent` evaluates each vendor’s sustainability performance using Google Gemini. It consumes enriched evidence from the message bus and calls the `query_gemini` function in the base agent to generate JSON-formatted ESG scores. It outputs `carbon_score`, `labor_score`, `waste_score`, and an aggregated `ESG_score`, along with qualitative `audit_log`/reasoning. If Gemini is unavailable, it falls back to a heuristic `_fallback_scoring` function based on certifications and text signals. Its purpose is to convert unstructured sustainability evidence into structured, comparable ESG metrics.
+
+### Risk Manager: `RiskAnalysisAgent`  
+The `RiskAnalysisAgent` focuses on supply chain risk dimensions such as delivery, compliance, reputational, and financial risks. It uses Gemini via `query_gemini` to analyze vendor attributes (lead time, risk score, evidence) and produce a concise narrative `risk_analysis` for each vendor. The agent publishes this analysis to the message bus for use by the ranking and reporting layers. Its purpose is to surface non‑financial and non‑ESG risks in a human‑readable form, supporting more holistic procurement decisions.
+
+### Quantitative Analyst: `TOPSISRankingAgent`  
+The `TOPSISRankingAgent` implements the TOPSIS multi‑criteria decision-making algorithm. It constructs a decision matrix from vendor attributes (cost, financial stability, lead time, technology, quality, hygiene, supply chain risk, and ESG score), normalizes values, applies user‑defined weights, and computes ideal best/worst solutions. Using Euclidean distances, it calculates a `topsis_score` for each vendor and sorts them accordingly. Its output is a ranked vendor list and a `ranking` message sent to the `ValidationAgent`. Its purpose is to translate multi-dimensional performance into a single, rigorous ranking aligned with business priorities.
+
+### Ethical Compliance Officer: `ValidationAgent`  
+The `ValidationAgent` ensures that the final recommendation respects sustainability thresholds. It inspects the top-ranked vendor’s `ESG_score` and, if it falls below a configurable minimum, adaptively adjusts the weight of `ESG_score` (increasing it) and redistributes the remaining weights across other criteria. It then re-invokes `TOPSISRankingAgent` for up to three iterations, logging each step in a `validation_log` and producing `final_weights`. Its purpose is to enforce ESG constraints on the decision, preventing low-sustainability vendors from being recommended solely on cost or operational advantages.
+
+### Record Keeper: `MemoryAgent`  
+The `MemoryAgent` manages long-term evaluation history using the `GoogleSheetsTool`. Through `save_evaluation`, it persists each `EvaluationRecord` (vendors, weights, results, metrics) to simulated or real storage. Via `get_vendor_context`, it retrieves historical records for a given vendor and uses Gemini to summarize performance trends, red flags, and an overall recommendation (e.g., “reliable”, “monitor”, “caution”). Its outputs are stored records and concise historical summaries. The agent’s purpose is to provide longitudinal context, enabling procurement teams to consider historical behavior, not just point-in-time scores.
+
+### Value Statement
 
 The Sustainable Vendor Decision System delivers strategic value by enabling textile purchasing teams to make faster, smarter, and more accountable sourcing decisions. By unifying cost, quality, supply chain risk, and ESG performance into a single AI-driven framework, it transforms vendor selection from a subjective, spreadsheet-based exercise into a transparent and repeatable decision process. The system empowers organizations to confidently prioritize suppliers that align with sustainability goals without losing sight of commercial realities. Through real-time data enrichment, ESG scoring, and TOPSIS-based ranking, it reduces hidden sustainability risks, strengthens supply chain resilience, and supports regulatory and stakeholder reporting. Its intuitive Streamlit interface and built-in observability make it practical for both technical and non-technical users, turning complex multi-criteria trade-offs into clear, defensible vendor recommendations.
-
-
-## 🎯 Key Features
-
-### 🤖 Multi-Agent Architecture
-- **6 Specialized AI Agents** working collaboratively:
-  - **DataCollectionAgent**: Web scraping and data enrichment using Google Custom Search API
-  - **ESGAgent**: Sustainability analysis powered by Google Gemini LLM
-  - **RiskAnalysisAgent**: Supply chain risk assessment with AI reasoning
-  - **TOPSISRankingAgent**: Multi-criteria decision making using TOPSIS algorithm
-  - **ValidationAgent**: Iterative validation with automatic weight adjustment
-  - **MemoryAgent**: Historical context and long-term learning
-
----
-### Intelligent Decision Making
-- **TOPSIS Algorithm** for multi-criteria vendor ranking
-- **Real-time Web Search** for vendor intelligence gathering
-- **Sustainability Scoring** across Carbon, Labor, and Waste dimensions
-- **Risk Analysis** with compliance and reputational assessment
-
-### 🌱 Comprehensive ESG Evaluation
-- **Carbon Footprint Management** scoring
-- **Labor Practices & Ethics** assessment
-- **Waste & Resource Management** analysis
-- Certification validation (ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX)
-- Real-time evidence gathering from web sources
-
-### 📊 Advanced Analytics
-- **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)** multi-criteria ranking
-- 8 evaluation dimensions:
-  - Cost efficiency
-  - Financial stability
-  - Lead time
-  - Technology adoption
-  - Quality standards
-  - Hygiene compliance
-  - Supply chain risk
-  - ESG performance
-- Customizable weight configurations with preset profiles
-
-### 🔄 Intelligent Validation Loop
-- Automatic sustainability threshold enforcement
-- Dynamic weight adjustment for ESG compliance
-- Iterative re-ranking until optimal solution found
-- Maximum 3 validation iterations with detailed logging
-
-### 📈 Enterprise-Grade Observability
-- Real-time agent execution metrics
-- Message bus activity monitoring
-- Performance trend analysis
-- Structured JSON logging
-- Historical evaluation tracking
 
 ---
 
@@ -346,48 +313,7 @@ Both actions bring you to the same window
   - Waste & resource management (waste_score)  
 - **Benefit criterion** (higher values are preferred)  
 - Central to the system’s focus on **supply chain sustainability**
----
 
-## 🤖 Agent Descriptions
-
-### 1. Data Collection Agent
-- **Purpose**: Enriches vendor data with web intelligence
-- **Tools**: Google Custom Search API
-- **Output**: Evidence of certifications, sustainability initiatives, compliance records
-
-### 2. ESG Agent
-- **Purpose**: Analyzes environmental and social responsibility
-- **Tools**: Google Gemini LLM
-- **Scoring**: Carbon (0-100), Labor (0-100), Waste (0-100)
-- **Certifications Recognized**:
-  - ISO 14001 (Environmental Management)
-  - GOTS (Global Organic Textile Standard)
-  - Fair Trade
-  - OEKO-TEX (Textile Safety)
-
-### 3. Risk Analysis Agent
-- **Purpose**: Identifies supply chain vulnerabilities
-- **Tools**: Google Gemini LLM
-- **Analysis**: Delivery risk, compliance risk, reputational risk, financial risk
-
-### 4. TOPSIS Ranking Agent
-- **Purpose**: Multi-criteria decision analysis
-- **Algorithm**: TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)
-- **Process**:
-  1. Normalize decision matrix
-  2. Apply user-defined weights
-  3. Calculate ideal best/worst solutions
-  4. Compute proximity scores
-
-### 5. Validation Agent
-- **Purpose**: Ensures sustainability compliance
-- **Logic**: Iterative loop (max 3 iterations)
-- **Action**: Adjusts weights if top vendor falls below sustainability threshold (default: 60/100)
-
-### 6. Memory Agent
-- **Purpose**: Long-term evaluation history
-- **Tools**: Google Sheets API (with in-memory fallback)
-- **Features**: Historical context retrieval, trend analysis
 
 ---
 
@@ -459,22 +385,6 @@ min_sustainability_threshold = 60.0  # Minimum ESG score
 max_iterations = 3                   # Maximum validation loops
 ESG_weight_increment = 0.15          # Weight adjustment per iteration
 ```
-
----
-
-## 📁 File Structure
-
-```
-V4_VDS.py                    # Main application file
-├── Domain Models            # Vendor, AgentMessage, EvaluationRecord
-├── Message Bus              # A2A communication protocol
-├── Base Agent Class         # LLM integration, metrics tracking
-├── Tools                    # GoogleSearchTool, GoogleSheetsTool
-├── Agents                   # 6 specialized agents
-├── Orchestrator             # Multi-agent coordinator
-└── Streamlit UI             # 7 interactive pages
-```
-
 ---
 
 ## 🧪 Demo Mode Features
@@ -544,52 +454,6 @@ streamlit run V4_VDS.py --server.port 8502
 
 ---
 
-## 📚 Technical Stack
-
-### Core Technologies
-- **Python 3.8+**: Primary language
-- **Streamlit**: Web UI framework
-- **Google Gemini**: LLM for intelligent analysis
-- **NumPy/Pandas**: Data processing
-- **Plotly**: Interactive visualizations
-
-### APIs & Services
-- **Google Generative AI**: Gemini 2.5 Flash Lite model
-- **Google Custom Search API**: Web intelligence gathering
-- **Google Sheets API**: Persistent storage (optional)
-
-### Design Patterns
-- **Multi-Agent System**: Coordinated autonomous agents
-- **Publish-Subscribe**: Message bus for A2A communication
-- **Decorator Pattern**: Execution tracking (`@track_execution`)
-- **Strategy Pattern**: Fallback mechanisms for tools
-
----
-
-## 🎓 Use Cases
-
-### 1. Procurement Teams
-- Evaluate multiple vendors simultaneously
-- Balance cost vs. sustainability
-- Generate audit-ready reports
-
-### 2. Sustainability Officers
-- Track vendor ESG compliance
-- Identify high-risk suppliers
-- Monitor certification status
-
-### 3. Supply Chain Managers
-- Assess delivery reliability
-- Analyze risk exposure
-- Optimize vendor portfolio
-
-### 4. Academic Research
-- Study multi-agent LLM systems
-- Analyze TOPSIS algorithm applications
-- Explore sustainable procurement strategies
-
----
-
 ## 📖 Algorithm Deep Dive: TOPSIS
 
 ### What is TOPSIS?
@@ -609,57 +473,6 @@ streamlit run V4_VDS.py --server.port 8502
 - Considers both positive and negative ideal solutions
 - Mathematically rigorous and transparent
 - Widely used in supply chain management
-
----
-
-## 🌟 Advanced Features
-
-### Parallel Execution
-- Data Collection and Risk Analysis run concurrently
-- Reduces total evaluation time by ~40%
-- Configurable via UI checkbox
-
-### Validation Loop
-- Automatically adjusts weights if sustainability threshold not met
-- Maximum 3 iterations to prevent infinite loops
-- Logs all weight adjustments for transparency
-
-### Historical Context
-- Memory Agent retrieves past vendor performance
-- Gemini summarizes trends and red flags
-- Informs current evaluation decisions
-
-### A2A Protocol
-- Structured messages with typed payloads
-- Message bus logs all inter-agent communication
-- Enables debugging and system monitoring
-
----
-
-## 📝 Example Evaluation Flow
-
-```
-User Action: Select 3 vendors, set weights, execute
-    ↓
-Orchestrator: Initialize message bus, clear state
-    ↓
-Phase 1 (Parallel):
-    - DataCollectionAgent: Search web for "Vendor A sustainability"
-    - RiskAnalysisAgent: Analyze risk factors for Vendor A
-    ↓
-Phase 2 (Sequential):
-    - SustainabilityAgent: Query Gemini for Carbon/Labor/Waste scores
-    ↓
-Phase 3:
-    - TOPSISAgent: Calculate proximity scores
-    ↓
-Phase 4 (Loop):
-    - ValidationAgent: Check if top vendor meets threshold
-    - If NO: Adjust weights (+15% sustainability), re-rank
-    - If YES: Finalize results
-    ↓
-Output: Ranked vendor list with detailed analysis
-```
 ---
 
 ## 👨‍💻 Author
