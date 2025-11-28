@@ -312,7 +312,7 @@ Both actions bring you to the same window
 - Quality score (0-100)
 - Based on historical performance
 
-### 3. Delivery Time (Lower is Better)
+### 3. Lead Time (Lower is Better)
 - Expected delivery in days
 - Critical for supply chain efficiency
 
@@ -334,7 +334,7 @@ Both actions bring you to the same window
 - **Tools**: Google Custom Search API
 - **Output**: Evidence of certifications, sustainability initiatives, compliance records
 
-### 2. Sustainability Agent
+### 2. ESG Agent
 - **Purpose**: Analyzes environmental and social responsibility
 - **Tools**: Google Gemini LLM
 - **Scoring**: Carbon (0-100), Labor (0-100), Waste (0-100)
@@ -385,57 +385,38 @@ Both actions bring you to the same window
 
 ### Performance Dashboard
 - View agent execution times
-
-![System_metrics](Images/Agent_Status.png)
-
 - Track evaluation trends over time
-
-
 - Monitor message exchange counts
 
+![Dashboard](Images/Recent_evaluation.png)
+
 ---
-
-## 🎨 User Interface Pages
-
-### 📊 Dashboard
-- System overview
-- Recent evaluations
-- Quick metrics (vendors, evaluations, agents, messages)
-
-### 👥 Vendors
-- View all vendors in table format
-- Add new vendors
-- Edit existing vendors
-- Delete vendors
-
-### 📝 New Evaluation
-- 3-step wizard:
-  1. Select vendors
-  2. Configure weights (with presets)
-  3. Execute evaluation
-
-### 🏆 Results
-- Ranked vendor list with TOPSIS scores
-- Performance radar charts (top 3 vendors)
-- Sustainability breakdown with Gemini reasoning
-- Agent execution metrics
-- Validation loop log
-- CSV export
 
 ### 🕐 History
 - Browse past evaluations
 - View execution details
 - Re-open previous results
 
+![History](Images/Evaluation_History.png)
+
 ### 📈 System Metrics
 - Agent status and performance
+
+![System_metrics](Images/Agent_Status.png)
+
 - Message bus activity
+![System_metrics](Images/Message_bus_activity.png)
+
 - Performance trends over time
+
+![System_metrics](Images/Performance_trends.png)
 
 ### ⚙️ API Settings
 - Update API credentials
 - Reinitialize system
 - View current configuration
+
+[API_Settings](Images/API_Settings.png)
 
 ---
 
