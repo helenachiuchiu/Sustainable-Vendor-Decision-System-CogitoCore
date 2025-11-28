@@ -110,7 +110,7 @@ flowchart TB
 ### Core Technologies
 - **Python 3.8+**
 - **Streamlit** - Interactive web interface
-- **Google Gemini 1.5 Flash** - Large Language Model for AI reasoning
+- **Google Gemini 2.5 Flash Lite** - Large Language Model for AI reasoning
 - **Google Custom Search API** - Real-time vendor data enrichment
 - **NumPy & Pandas** - Data processing and analysis
 - **Plotly** - Interactive visualizations
@@ -305,26 +305,48 @@ Both actions bring you to the same window
 ## 📊 Evaluation Criteria
 
 ### 1. Cost (Lower is Better)
-- Total purchasing cost in USD
-- Weighted against other factors
+- Price per 100 yards in USD  
+- Direct impact on procurement budget  
+- Treated as a **cost criterion** in TOPSIS (lower values are preferred)
 
-### 2. Quality (Higher is Better)
-- Quality score (0-100)
-- Based on historical performance
+### 2. Financial Stability (Higher is Better)
+- Vendor financial health score (0–100)  
+- Indicates ability to sustain long-term supply commitments  
+- **Benefit criterion** (higher values are preferred)
 
 ### 3. Lead Time (Lower is Better)
-- Expected delivery in days
-- Critical for supply chain efficiency
+- Expected delivery time in days  
+- Shorter lead times reduce stockouts and improve responsiveness  
+- **Cost criterion** in TOPSIS (lower values are preferred)
 
-### 4. Risk (Lower is Better)
-- Supply chain risk score (0-100)
-- Includes delivery, compliance, financial, reputational risks
+### 4. Technology (Higher is Better)
+- Technology maturity score (0–100)  
+- Reflects automation, process sophistication, and innovation capability  
+- **Benefit criterion** (higher values are preferred)
 
-### 5. Sustainability (Higher is Better)
-- **Carbon Score**: Environmental impact, emissions management
-- **Labor Score**: Worker rights, fair trade practices
-- **Waste Score**: Resource efficiency, circular economy initiatives
+### 5. Quality (Higher is Better)
+- Product quality score (0–100)  
+- Based on consistency, defect rates, and historical performance  
+- **Benefit criterion** (higher values are preferred)
 
+### 6. Hygiene (Higher is Better)
+- Workplace and production hygiene score (0–100)  
+- Especially important for textiles involving sensitive or skin-contact materials  
+- **Benefit criterion** (higher values are preferred)
+
+### 7. Supply Chain Risk (Lower is Better)
+- Overall risk score (0–100)  
+- Captures exposure to disruptions, geopolitical issues, compliance gaps, etc.  
+- **Cost criterion** (lower values are preferred)
+
+### 8. ESG Score (Higher is Better)
+- Aggregate Environmental, Social, and Governance performance (0–100)  
+- Derived from:
+  - Carbon footprint management (carbon_score)  
+  - Labor practices & ethics (labor_score)  
+  - Waste & resource management (waste_score)  
+- **Benefit criterion** (higher values are preferred)  
+- Central to the system’s focus on **supply chain sustainability**
 ---
 
 ## 🤖 Agent Descriptions
@@ -422,24 +444,22 @@ Both actions bring you to the same window
 
 ## 🔧 Configuration Options
 
-### Weight Presets
+| Weights Presets | Cost | Financial Stability | Lead Time | Technology | Quality | Hygiene | Supply Chain Risk | ESG Score | Use Case |
+|-------------|------|---------------------|-----------|------------|---------|---------|-------------------|-----------|----------|
+| **Balanced** | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | 0.125 (12.5%) | Equal importance across all criteria |
+| **Cost Focused** | 0.45 (45%) | 0.2 (20%) | 0.1 (10%) | 0.05 (5%) | 0.1 (10%) | 0.05 (5%) | 0.049 (4.9%) | 0.001 (0.1%) | Minimize procurement costs, minimal sustainability focus |
+| **ESG-Oriented** | 0.15 (15%) | 0.1 (10%) | 0.05 (5%) | 0.05 (5%) | 0.1 (10%) | 0.1 (10%) | 0.15 (15%) | 0.3 (30%) | Prioritize sustainability and environmental responsibility |
+| **Business Sustainability Prioritized** | 0.2 (20%) | 0.2 (20%) | 0.1 (10%) | 0.1 (10%) | 0.1 (10%) | 0.1 (10%) | 0.1 (10%) | 0.1 (10%) | Balance business continuity with moderate sustainability |
+| **Custom** | User-defined | User-defined | User-defined | User-defined | User-defined | User-defined | User-defined | User-defined | Fully customizable weights via sliders |
 
-#### Balanced (Default)
-- Cost: 20%, Quality: 20%, Delivery: 20%, Risk: 20%, Sustainability: 20%
 
-#### Cost Focused
-- Cost: 50%, Quality: 10%, Delivery: 10%, Risk: 10%, Sustainability: 20%
-
-#### Sustainability First
-- Cost: 10%, Quality: 10%, Delivery: 10%, Risk: 10%, Sustainability: 60%
-
-#### Quality First
-- Cost: 10%, Quality: 50%, Delivery: 10%, Risk: 10%, Sustainability: 20%
 
 ### Validation Settings
-- **Sustainability Threshold**: 60/100 (configurable in code)
-- **Max Iterations**: 3 loops
-- **Weight Adjustment**: +15% to sustainability per iteration
+```python
+min_sustainability_threshold = 60.0  # Minimum ESG score
+max_iterations = 3                   # Maximum validation loops
+ESG_weight_increment = 0.15          # Weight adjustment per iteration
+```
 
 ---
 
@@ -480,14 +500,14 @@ When running without API keys:
 
 ## 📊 Sample Vendors (Pre-loaded)
 
-| ID | Name | Cost | Quality | Delivery | Risk | Certifications |
-|----|------|------|---------|----------|------|----------------|
-| V001 | Global Textiles Ltd | $45,000 | 88 | 25 days | 15 | ISO 9001, ISO 14001, GOTS |
-| V002 | EcoFabrics Inc | $52,000 | 92 | 30 days | 18 | ISO 9001, ISO 14001, GOTS, Fair Trade |
-| V003 | Premium Weave Co | $38,000 | 78 | 20 days | 25 | ISO 9001 |
-| V004 | Sustainable Threads | $48,000 | 85 | 28 days | 20 | ISO 9001, ISO 14001, GOTS, OEKO-TEX |
-| V005 | FastFabric Solutions | $35,000 | 70 | 15 days | 35 | None |
-| V006 | Quality First Textiles | $55,000 | 95 | 35 days | 12 | ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX |
+| ID   | Name                      | Cost | Financial Stability | Lead Time (days) | Technology | Quality | Hygiene | Supply Chain Risk | Certifications                                        |
+|------|---------------------------|------|---------------------|------------------|------------|---------|---------|-------------------|------------------------------------------------------|
+| V001 | Global Textiles Ltd       | 450  | 95                  | 28               | 75         | 65      | 70      | 15                | ISO 9001, ISO 14001, GOTS                            |
+| V002 | EcoFabrics Inc            | 1200 | 60                  | 35               | 90         | 85      | 90      | 40                | ISO 9001, ISO 14001, GOTS, Fair Trade                |
+| V003 | Premium Weave Co          | 1550 | 85                  | 42               | 65         | 98      | 85      | 20                | ISO 9001                                             |
+| V004 | Sustainable Threads       | 1100 | 55                  | 28               | 70         | 80      | 85      | 45                | ISO 9001, ISO 14001, GOTS, OEKO-TEX                  |
+| V005 | FastFabric Solutions      | 700  | 70                  | 7                | 95         | 60      | 65      | 30                | None                                                 |
+| V006 | Quality First Textiles    | 850  | 80                  | 35               | 60         | 95      | 90      | 10                | ISO 9001, ISO 14001, GOTS, Fair Trade, OEKO-TEX      |
 
 ---
 
@@ -535,7 +555,7 @@ streamlit run V4_VDS.py --server.port 8502
 - **Plotly**: Interactive visualizations
 
 ### APIs & Services
-- **Google Generative AI**: Gemini 1.5 Flash model
+- **Google Generative AI**: Gemini 2.5 Flash Lite model
 - **Google Custom Search API**: Web intelligence gathering
 - **Google Sheets API**: Persistent storage (optional)
 
@@ -670,11 +690,6 @@ This project is provided as-is for educational and commercial use. Please ensure
 ## 👨‍💻 Author
 
 **CogitoCore** - Agents Intensive - Capstone Project (Kaggle · Community Hackathon)
-
-- Helena Chiu
-- Joshua
-- Gautam Sutar
-- Aakarshak Sethi
 
 Designed for enterprise procurement teams in the textile industry.
 
