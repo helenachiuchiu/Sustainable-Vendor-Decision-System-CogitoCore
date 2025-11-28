@@ -296,7 +296,7 @@ Both actions bring you to the same window
 
 - Validation loop log
 
-![Validation_loop_log](Imanges/VDLL.png)
+![Validation](Images/VDLL.png)
 
 - Download results as CSV
 
