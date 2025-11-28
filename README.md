@@ -312,7 +312,7 @@ Both actions bring you to the same window
   - Labor practices & ethics (labor_score)  
   - Waste & resource management (waste_score)  
 - **Benefit criterion** (higher values are preferred)  
-- Central to the system’s focus on **supply chain sustainability**
+- Central to the system’s focus on **sustainability**
 
 
 ---
