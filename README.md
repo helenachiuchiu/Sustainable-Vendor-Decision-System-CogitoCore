@@ -15,7 +15,7 @@ This project contains the core logic for Sustainable Vendor Decision System, a m
 
 ### Problem Statement
 
-TOPSIS is a multi‑criteria decision method that ranks vendors by how close each is to an “ideal” supplier (best cost, quality, sustainability, risk profile, delivery time) and far from the “worst”, with criteria weights reflecting business nature, values, operating context and scalability needs. Automated TOPSIS platforms can (1) store user‑preferred evaluation profiles, (2) pull real‑time online data on vendor cost, delivery, ESG, financial and compliance risks, and (3) auto‑score and weight criteria. Normalisation and distance calculations are then executed instantly and consistently. This reduces manual bias, speeds procurement (or purchasing) , and enables continuous re‑evaluation as conditions change, helping enterprises detect emerging risks early while aligning vendor choices with long‑term operational resilience and sustainability goals.
+The textile industry’s purchasing departments face increasing pressure to balance cost, quality, and delivery performance with stringent sustainability expectations. Traditional vendor evaluation methods are often manual, fragmented, and weak in capturing ESG (Environmental, Social, Governance) risks and long‑term supply chain resilience. This leads to suboptimal sourcing decisions, hidden sustainability risks, and misalignment with corporate sustainability goals. Automated vendor evaluation platforms can (1) store user‑preferred evaluation profiles, (2) pull real‑time online data on vendor cost, delivery, ESG, financial and compliance risks, and (3) auto‑score and weight criteria. Normalisation and distance calculations are then executed instantly and consistently. This reduces manual bias, speeds procurement (or purchasing) , and enables continuous re‑evaluation as conditions change, helping enterprises detect emerging risks early while aligning vendor choices with long‑term operational resilience and sustainability goals.
 
 ### Solution Statement
 Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating purchasing cycles, and aligning vendor selection with long-term sustainability goals.
@@ -52,6 +52,12 @@ flowchart TB
 
 ```
 ---
+
+## Value Statement
+
+The Sustainable Vendor Decision System delivers strategic value by enabling textile purchasing teams to make faster, smarter, and more accountable sourcing decisions. By unifying cost, quality, supply chain risk, and ESG performance into a single AI-driven framework, it transforms vendor selection from a subjective, spreadsheet-based exercise into a transparent and repeatable decision process. The system empowers organizations to confidently prioritize suppliers that align with sustainability goals without losing sight of commercial realities. Through real-time data enrichment, ESG scoring, and TOPSIS-based ranking, it reduces hidden sustainability risks, strengthens supply chain resilience, and supports regulatory and stakeholder reporting. Its intuitive Streamlit interface and built-in observability make it practical for both technical and non-technical users, turning complex multi-criteria trade-offs into clear, defensible vendor recommendations.
+
+
 ## 🎯 Key Features
 
 ### 🤖 Multi-Agent Architecture
@@ -163,13 +169,6 @@ flowchart TB
 ```bash
 pip install google-generativeai google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas numpy streamlit plotly requests
 ```
-
-### Quick Install (One Command)
-
-```bash
-pip install google-generativeai google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas numpy streamlit plotly requests
-```
-
 ---
 
 ## 🔑 API Configuration
@@ -594,7 +593,7 @@ streamlit run V4_VDS.py --server.port 8502
 ## 📖 Algorithm Deep Dive: TOPSIS
 
 ### What is TOPSIS?
-**Technique for Order of Preference by Similarity to Ideal Solution**
+**Technique for Order of Preference by Similarity to Ideal Solution** is a multi‑criteria decision method that ranks vendors by how close each is to an “ideal” supplier (e.g. best cost, finanacial stability, quality, lead time) and far from the “worst”, with criteria weights reflecting business nature, values, operating context and scalability needs. 
 
 ### Steps:
 1. **Normalize Decision Matrix**: Scale all criteria to comparable range
@@ -661,30 +660,6 @@ Phase 4 (Loop):
     ↓
 Output: Ranked vendor list with detailed analysis
 ```
-
----
-
-## 🤝 Contributing
-
-This system is designed for educational and enterprise use. Potential enhancements:
-
-- [ ] Add more LLM providers (OpenAI, Anthropic)
-- [ ] Implement MCP (Model Context Protocol) tools
-- [ ] Add pause/resume functionality for long evaluations
-- [ ] Integrate with ERP systems (SAP, Oracle)
-- [ ] Expand to other industries (manufacturing, electronics)
-- [ ] Add multi-language support
-- [ ] Implement distributed tracing (OpenTelemetry)
-
----
-
-## 📄 License
-
-This project is provided as-is for educational and commercial use. Please ensure compliance with:
-- Google API Terms of Service
-- Gemini API Usage Policies
-- Custom Search API Quotas
-
 ---
 
 ## 👨‍💻 Author
@@ -695,64 +670,11 @@ Designed for enterprise procurement teams in the textile industry.
 
 ---
 
-## 📞 Support
-
 ### Quick Links
 - [Gemini API Documentation](https://ai.google.dev/docs)
 - [Google Custom Search API](https://developers.google.com/custom-search)
 - [Streamlit Documentation](https://docs.streamlit.io)
 - [TOPSIS Algorithm Explanation](https://en.wikipedia.org/wiki/TOPSIS)
-
-### Common Questions
-
-**Q: Can I use this for other industries?**  
-A: Yes! Modify the vendor attributes and sustainability criteria to fit your domain.
-
-**Q: How accurate is the sustainability scoring?**  
-A: Accuracy depends on:
-- Quality of web search results
-- Gemini LLM reasoning (generally high quality)
-- Certification data availability
-
-**Q: Can I deploy this to production?**  
-A: The system is production-ready for internal use. For public deployment:
-- Add authentication (OAuth, SAML)
-- Implement rate limiting
-- Use production Google Sheets integration
-- Add error monitoring (Sentry, etc.)
-
-**Q: What's the cost of running this?**  
-A: 
-- **Gemini API**: ~$0.00025 per 1K characters (very affordable)
-- **Custom Search API**: 100 queries/day free, then $5 per 1K queries
-- **Streamlit**: Free for local/internal use
-
----
-
-## 🎉 Getting Started Checklist
-
-- [ ] Install Python 3.8+
-- [ ] Install required libraries (`pip install ...`)
-- [ ] (Optional) Obtain Gemini API key
-- [ ] (Optional) Set up Google Custom Search
-- [ ] Run `streamlit run V4_VDS.py`
-- [ ] Login with username: `CogitoCore`
-- [ ] Explore demo mode with pre-loaded vendors
-- [ ] Create your first evaluation
-- [ ] Review results and download CSV
-- [ ] Check system metrics page
-
----
-
-## 🚀 Next Steps
-
-1. **Customize Vendors**: Add your actual supplier data
-2. **Adjust Weights**: Reflect your organization's priorities
-3. **Set Threshold**: Configure sustainability minimum (line 499 in code)
-4. **Integrate APIs**: Connect live Gemini and Search APIs
-5. **Export Data**: Use CSV downloads for reporting
-6. **Monitor Performance**: Track agent execution times
-7. **Iterate**: Refine weights based on evaluation outcomes
 
 ---
 
