@@ -274,16 +274,16 @@ Both actions bring you to the same window
 
 ![Execute](/Images/New_Evaluation_Step_3_Review_&_Execute.png)
 
-#### Step 4: Review Results
-- View ranked vendors with TOPSIS scores
+#### Step 5: Review Results
+-Ranked vendor list with TOPSIS scores
 
 ![Review Results](/Images/11_Evaluation_Results_Rankings(2).png)
 
--Performance Radar of vendors
+-Performance Radar of Top 3 vendors
 
 ![Review Results](/Images/Evaluation_Results_Performance_Radar.png)
 
-- Analyze sustainability breakdowns (Carbon, Labor, Waste)
+- Analyze sustainability breakdowns with Gemini reasoning(Carbon, Labor, Waste)
 
 ![Review Results](/Images/ESG_and_risk_anatab.png)
 
@@ -291,8 +291,13 @@ Both actions bring you to the same window
 
 ![Review Results](/Images/Gemini_Ana_and_risk_ana.png)
 
-- Review Gemini AI reasoning
-- Examine validation loop adjustments
+- Agent execution metrics
+![Review_Results](Images/Agent_Metrics.png)
+
+- Validation loop log
+
+![Validation_loop_log](Imanges/VDLL.png)
+
 - Download results as CSV
 
 ---
@@ -380,7 +385,12 @@ Both actions bring you to the same window
 
 ### Performance Dashboard
 - View agent execution times
+
+![System_metrics](Images/Agent_Status.png)
+
 - Track evaluation trends over time
+
+
 - Monitor message exchange counts
 
 ---
