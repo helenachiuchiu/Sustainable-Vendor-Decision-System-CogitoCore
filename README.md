@@ -272,22 +272,25 @@ Both actions bring you to the same window
 
 4. **Execute**: Run multi-agent analysis
 
-![Execute](/Images/10_New_Evaluation_Step_3_Review_&_Execute.png)
+![Execute](/Images/New_Evaluation_Step_3_Review_&_Execute.png)
 
 #### Step 4: Review Results
 - View ranked vendors with TOPSIS scores
 
-![Review Results](/Images/11_Evaluation_Results_Rankings.png)
+![Review Results](/Images/11_Evaluation_Results_Rankings(2).png)
 
 -Performance Radar of vendors
 
-![Review Results](/Images/12 Evaluation Results - Performance Radar.png)
+![Review Results](/Images/Evaluation_Results_Performance_Radar.png)
 
 - Analyze sustainability breakdowns (Carbon, Labor, Waste)
 
-![Review Results](/Images/<img width="2552" height="1322" alt="13 Evaluation Results - Sustainability Analysis" src="https://github.com/user-attachments/assets/1f0c1e6b-87b9-4516-8a5e-d24daf756bb7" />
+![Review Results](/Images/ESG_and_risk_anatab.png)
 
-  
+![Review Results](/Images/ESG_performance_and_certs_review.png)
+
+![Review Results](/Images/Gemini_Ana_and_risk_ana.png)
+
 - Review Gemini AI reasoning
 - Examine validation loop adjustments
 - Download results as CSV
