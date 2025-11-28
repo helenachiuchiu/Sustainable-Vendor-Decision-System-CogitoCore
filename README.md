@@ -248,7 +248,7 @@ Both actions bring you to the same window
 #### Step 5: Review Results
 -Ranked vendor list with TOPSIS scores
 
-![Review Results](/Images/11_Evaluation_Results_Rankings(2).png)
+![Review Results](/Images/Evaluation_Results_Rankings.png)
 
 -Performance Radar of Top 3 vendors
 
