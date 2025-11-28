@@ -20,7 +20,7 @@ The textile industry’s purchasing departments face increasing pressure to bala
 ### Solution Statement
 Multi-agent AI platform could automate vendor evaluation for enterprise procurement teams. Leveraging Google Gemini LLM and TOPSIS multi-criteria analysis, the **Sustainable Vendor Decision System (V4_VDS.py)** deploys six specialized agents to assess vendors across cost, quality, delivery, risk, and sustainability dimensions. It performs real-time web intelligence gathering, ESG scoring (carbon, labor, waste), and iterative validation to ensure compliance thresholds are met. The interactive Streamlit interface enables non-technical users to configure evaluation weights, execute parallel analyses, and generate audit-ready reports—reducing manual bias, accelerating purchasing cycles, and aligning vendor selection with long-term sustainability goals.
 
-## 🏗️ Architecture
+
 ```mermaid
 
 flowchart TB
@@ -52,7 +52,7 @@ flowchart TB
 
 ```
 ---
-## 🤖 Agent Descriptions
+## 🏗️ Architecture
 
 ### Research Analyst:`DataCollectionAgent`  
 The `DataCollectionAgent` enriches vendor data by querying the web for sustainability-related information. Using the `GoogleSearchTool`, it pulls evidence on certifications, ESG initiatives, and news items for each vendor. It parses this evidence to infer or update certifications (e.g., ISO 14001, GOTS, Fair Trade, OEKO‑TEX) and logs all findings. Its main output is an updated set of vendor objects with `evidence_found` and refined `certifications`, which it publishes to the message bus for downstream agents. Its purpose is to transform static vendor records into richer, context-aware profiles grounded in external data.
