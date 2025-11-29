@@ -137,7 +137,7 @@ class BaseAgent:
         if gemini_api_key and "demo_mode" not in gemini_api_key.lower():
             try:
                 genai.configure(api_key=gemini_api_key)
-                self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+                self.gemini_model = genai.GenerativeModel('gemini-2.5-flash-lite')
             except Exception as e:
                 self.logger.warning(f"Failed to initialize Gemini: {e}")
     
@@ -1342,7 +1342,7 @@ def results_page():
     st.divider()
     
     # Detailed analysis tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Performance Radar", "🌱 ESG Analysis", 
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Performance Radar", "🌱 ESG and Risk Analysis", 
                                        "📈 Agent Metrics", "🔍 Validation Log"])
     
     with tab1:
@@ -1377,7 +1377,7 @@ def results_page():
                 st.plotly_chart(fig, use_container_width=True)
     
     with tab2:
-        st.subheader("🌱 ESG Analysis")
+        st.subheader("🌱 ESG and Risk Analysis")
         for i, v_dict in enumerate(rec.results):
             with st.expander(f"#{i+1} {v_dict['name']} (Score: {v_dict['ESG_score']:.1f})"):
                 c1, c2, c3 = st.columns(3)
@@ -1648,6 +1648,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# cd "c:/GenAI capstone project/"
-# streamlit run V4_VDS.py
