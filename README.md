@@ -4,7 +4,7 @@ This project contains the core logic for Sustainable Vendor Decision System, a m
 
 ## 🌐 Live Demo
 
-**Try it now**: [https://sustainable-vendor-decision-system-cogitocore-tl2juvlnpmbdbat7.streamlit.app/](https://your-app-url.streamlit.app)
+**Try it now**: [https://sustainable-vendor-decision-system-cogitocore-tl2juvlnpmbdbat7.streamlit.app/]
 
 > 🎭 The live demo runs in **Demo Mode** by default (no API keys required)  
 > 🔐 Login credentials: Username: `CogitoCore` | Password: [any value]
