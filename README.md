@@ -36,7 +36,7 @@ flowchart TB
     %% --- Subgraph: Data Collection & ESG Analysis ---
     subgraph Data_ESG_Flow ["📊 Data Enrichment & ESG Analysis Pipeline"]
         direction TB
-        DataCollector["🤖 DataCollectorAgent"]:::subAgent
+        DataCollector["🤖 DataCollectonAgent"]:::subAgent
         SearchTool["🔍 GoogleSearchTool"]:::tool
         ESGAgent["🤖 ESGAgent"]:::subAgent
         
