@@ -22,33 +22,79 @@ Multi-agent AI platform could automate vendor evaluation for enterprise procurem
 
 
 ```mermaid
-
 flowchart TB
+    %% Enhanced Styles with better contrast and visual hierarchy
+    classDef mainAgent fill:#1a4d2e,stroke:#4caf50,stroke-width:3px,color:#fff,font-weight:bold,font-size:16px;
+    classDef subAgent fill:#2d2d2d,stroke:#66bb6a,stroke-width:2px,color:#fff,rx:10,ry:10;
+    classDef tool fill:#3b3b3b,stroke:#ffa726,stroke-width:2px,color:#ffd54f,stroke-dasharray: 5 5,rx:5,ry:5;
+    classDef loopBox fill:#1a1a1a,stroke:#4caf50,stroke-width:2px,color:#fff;
+    classDef decision fill:#424242,stroke:#ff9800,stroke-width:2px,color:#fff,shape:diamond;
 
-    %% --- Top Orchestrator ---
-    ORCH["🧠MultiAgentOrchestrator <br/>(Coordinates all agents <br/> + manages execution flow)"]
+    %% --- Central Orchestrator (Main Hub) ---
+    Orchestrator["🎯 MultiAgentOrchestrator"]:::mainAgent
 
-    %% --- Agent Layer ---
-    MB["🚌 MessageBus<br/>(Central A2A <br/>communication protocol)"]
-    DC["📥 DataCollectionAgent"]
-    RISK["⚠️ RiskAnalysisAgent"]
-    ESG["🌱 ESGAgent"]
-    TOPSIS["🔢 TOPSISRankingAgent"]
-    VALID["🔁 ValidationAgent"]
-    MEM["MemoryAgent (Persistence)"]
-    %% --- Flow Connections ---
-    ORCH --> MB
-    MB --> RISK
-    MB --> ESG
-    MB --> DC
-    DC --> TOPSIS
-    RISK --> TOPSIS
-    ESG --> TOPSIS
+    %% --- Subgraph: Data Collection & ESG Analysis ---
+    subgraph Data_ESG_Flow ["📊 Data Enrichment & ESG Analysis Pipeline"]
+        direction TB
+        DataCollector["🤖 DataCollectorAgent"]:::subAgent
+        SearchTool["🔍 GoogleSearchTool"]:::tool
+        ESGAgent["🤖 ESGAgent"]:::subAgent
+        
+        DataCollector --> SearchTool
+        SearchTool -.->|"Enriched Data"| ESGAgent
+    end
 
-    TOPSIS --> VALID
+    %% --- Risk Analysis Agent ---
+    RiskAgent["🤖 RiskAnalysisAgent"]:::subAgent
 
-    VALID --> MEM
+    %% --- TOPSIS Ranking Agent ---
+    TOPSIS["🤖 TOPSISRankingAgent"]:::subAgent
 
+    %% --- Subgraph: Validation Loop ---
+    subgraph Validation_Loop ["✅ Robust Validation Loop"]
+        direction TB
+        ValidationAgent["🤖 ValidationAgent"]:::subAgent
+        ThresholdCheck{"Score ≥ 60?<br/><small>(Quality <br/>Threshold</small>"}:::decision
+        AdjustWeights["⚙️ Adjust Weights<br/><small>Parameter Tuning</small>"]:::tool
+        
+        ValidationAgent --> ThresholdCheck
+        ThresholdCheck -->|"❌ Below Threshold"| AdjustWeights
+        AdjustWeights --> ValidationAgent
+        ThresholdCheck -->|"✅ Passed"| FinalOutput["📋 Final Validated Ranking"]:::subAgent
+    end
+
+    %% --- Memory & Storage ---
+    Memory["🤖 MemoryAgent"]:::subAgent
+    SheetsTool["📊 GoogleSheetsTool"]:::tool
+
+    %% --- Shared LLM Tool ---
+    GeminiAPI["Gemini API"]:::tool
+
+    %% --- Main Flow from Orchestrator ---
+    Orchestrator ==>|"Initiate"| Data_ESG_Flow
+    Orchestrator ==>|"Analyze"| RiskAgent
+    
+    %% --- Data Flow Pipeline ---
+    Data_ESG_Flow ==>|"ESG Metrics"| TOPSIS
+    RiskAgent ==>|"Risk Scores"| TOPSIS
+    TOPSIS ==>|"Preliminary Rankings"| Validation_Loop
+    
+    %% --- Validation to Memory ---
+    FinalOutput ==>|"Validated Results"| Memory
+    Memory ==>|"Persist Data"| SheetsTool
+
+    %% --- LLM Tool Connections ---
+    RiskAgent -.->|"Query"| GeminiAPI
+    ESGAgent -.->|"Query"| GeminiAPI
+    ValidationAgent -.->|"Query"| GeminiAPI
+
+    %% --- Orchestrator Oversight ---
+    Orchestrator -.->|"Monitor"| Validation_Loop
+    Orchestrator -.->|"Coordinate"| Memory
+
+    %% Custom Link Styles
+    linkStyle 0,1,2,3,4,5,6,7 stroke:#4caf50,stroke-width:2px;
+    linkStyle default stroke:#888,stroke-width:1.5px;
 ```
 ---
 ## 🏗️ Architecture
