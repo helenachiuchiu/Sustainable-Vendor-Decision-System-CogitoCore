@@ -26,27 +26,26 @@ Multi-agent AI platform could automate vendor evaluation for enterprise procurem
 flowchart TB
 
     %% --- Top Orchestrator ---
-    ORCH["🧠MULTI-AGENT ORCHESTRATOR <br/>(Coordinates all agents <br/> + manages execution flow)"]
+    ORCH["🧠MultiAgentOrchestrator <br/>(Coordinates all agents <br/> + manages execution flow)"]
 
     %% --- Agent Layer ---
-    DC["📥 DATA COLLECTOR<br/>(Data Collection Agent)"]
-    RISK["⚠️ RISK ANALYST<br/>(Risk Analysis Agent)"]
-    SUST["🌱 ESG AGENT"]
-    TOPSIS["🔢 TOPSIS RANKING"]
-    VALID["🔁 VALIDATION Agent<br/>(Loop Control)"]
-    MEM["MEMORY Agent (Persistence)"]
+    MB["🚌 MessageBus<br/>(Central A2A <br/>communication protocol)"]
+    DC["📥 DataCollectionAgent"]
+    RISK["⚠️ RiskAnalysisAgent"]
+    ESG["🌱 ESGAgent"]
+    TOPSIS["🔢 TOPSISRankingAgent"]
+    VALID["🔁 ValidationAgent"]
+    MEM["MemoryAgent (Persistence)"]
     %% --- Flow Connections ---
-    ORCH --> DC
-    ORCH --> RISK
-    ORCH --> SUST
-
+    ORCH --> MB
+    MB --> RISK
+    MB --> ESG
+    MB --> DC
     DC --> TOPSIS
     RISK --> TOPSIS
-    SUST --> TOPSIS
+    ESG --> TOPSIS
 
     TOPSIS --> VALID
-    
-    VALID --> TOPSIS
 
     VALID --> MEM
 
